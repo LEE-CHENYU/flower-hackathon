@@ -12,10 +12,18 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from core.llava_lora_model import LLaVALoRAModel
 from core.gpt5_label_generator import GPT5LabelGenerator
+from core.model_configs import get_model_config
 from data_loader import FirstPhotoDataset
 
 class DentalFLClient(fl.client.NumPyClient):
-    def __init__(self, client_id: int, data_path: str, batch_size: int = 4, learning_rate: float = 1e-4):
+    def __init__(
+        self,
+        client_id: int,
+        data_path: str,
+        batch_size: int = 4,
+        learning_rate: float = 1e-4,
+        model_config: str = "tiny-llava"
+    ):
         """
         Initialize Federated Learning Client
 
@@ -24,15 +32,25 @@ class DentalFLClient(fl.client.NumPyClient):
             data_path: Path to local data
             batch_size: Training batch size
             learning_rate: Learning rate for optimizer
+            model_config: Model configuration name
         """
         self.client_id = client_id
         self.data_path = data_path
         self.batch_size = batch_size
         self.learning_rate = learning_rate
 
-        # Initialize model
-        print(f"Client {client_id}: Initializing LLaVA model with LoRA...")
-        self.model = LLaVALoRAModel()
+        # Get model configuration
+        config = get_model_config(model_config)
+        print(f"Client {client_id}: Using {model_config} - {config['description']}")
+
+        # Initialize model with configuration
+        print(f"Client {client_id}: Initializing model...")
+        self.model = LLaVALoRAModel(
+            model_name=config["model_name"],
+            lora_config=config.get("lora_config"),
+            use_quantization=config.get("use_quantization", False),
+            quantization_bits=config.get("quantization_bits", 4)
+        )
 
         # Initialize data loader
         self.dataset = FirstPhotoDataset(data_path)

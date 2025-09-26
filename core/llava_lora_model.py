@@ -1,5 +1,6 @@
 """
 LLaVA with LoRA Adapter for Federated Learning
+Supports TinyLLaVA and QLoRA quantization
 """
 
 import torch
@@ -7,26 +8,47 @@ import torch.nn as nn
 from typing import Dict, List, Tuple, Optional
 import numpy as np
 from pathlib import Path
-from transformers import AutoModelForVision2Seq, AutoTokenizer, AutoProcessor
-from peft import LoraConfig, get_peft_model, TaskType
+from transformers import AutoModelForVision2Seq, AutoTokenizer, AutoProcessor, BitsAndBytesConfig
+from peft import LoraConfig, get_peft_model, TaskType, prepare_model_for_kbit_training
 from PIL import Image
 import json
 
 class LLaVALoRAModel:
-    def __init__(self, model_name: str = "llava-hf/llava-1.5-7b-hf", lora_config: Optional[Dict] = None):
+    def __init__(
+        self,
+        model_name: str = "bczhou/tiny-llava-v1-hf",  # Changed to TinyLLaVA
+        lora_config: Optional[Dict] = None,
+        use_quantization: bool = False,
+        quantization_bits: int = 4
+    ):
         """
         Initialize LLaVA model with LoRA adapters
 
         Args:
-            model_name: HuggingFace model ID or local path
+            model_name: HuggingFace model ID (supports TinyLLaVA and regular LLaVA)
             lora_config: LoRA configuration dictionary
+            use_quantization: Whether to use QLoRA quantization
+            quantization_bits: Number of bits for quantization (4 or 8)
         """
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model_name = model_name
+        self.use_quantization = use_quantization
+        self.quantization_bits = quantization_bits
 
-        # Default LoRA configuration
-        if lora_config is None:
-            lora_config = {
+        # Adjust LoRA config based on model size
+        if "tiny" in model_name.lower():
+            # Smaller LoRA rank for TinyLLaVA
+            default_lora_config = {
+                "r": 8,
+                "lora_alpha": 16,
+                "target_modules": ["q_proj", "v_proj", "k_proj", "o_proj"],
+                "lora_dropout": 0.05,
+                "bias": "none",
+                "task_type": TaskType.VISION2SEQ_LM,
+            }
+        else:
+            # Standard config for larger models
+            default_lora_config = {
                 "r": 16,
                 "lora_alpha": 32,
                 "target_modules": ["q_proj", "v_proj", "k_proj", "o_proj"],
@@ -35,35 +57,66 @@ class LLaVALoRAModel:
                 "task_type": TaskType.VISION2SEQ_LM,
             }
 
-        self.lora_config = lora_config
+        self.lora_config = lora_config if lora_config else default_lora_config
         self._load_model()
 
     def _load_model(self):
-        """Load LLaVA model and apply LoRA"""
+        """Load LLaVA model and apply LoRA with optional quantization"""
         try:
             # Load tokenizer and processor
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
             self.processor = AutoProcessor.from_pretrained(self.model_name)
 
+            # Configure quantization if requested
+            if self.use_quantization and torch.cuda.is_available():
+                print(f"Loading with {self.quantization_bits}-bit quantization (QLoRA)")
+                bnb_config = BitsAndBytesConfig(
+                    load_in_4bit=(self.quantization_bits == 4),
+                    load_in_8bit=(self.quantization_bits == 8),
+                    bnb_4bit_compute_dtype=torch.float16,
+                    bnb_4bit_use_double_quant=True,
+                    bnb_4bit_quant_type="nf4"
+                )
+                model_kwargs = {
+                    "quantization_config": bnb_config,
+                    "device_map": "auto"
+                }
+            else:
+                model_kwargs = {
+                    "torch_dtype": torch.float16 if torch.cuda.is_available() else torch.float32,
+                    "low_cpu_mem_usage": True
+                }
+
             # Load base model
-            print(f"Loading LLaVA model: {self.model_name}")
+            model_type = "TinyLLaVA" if "tiny" in self.model_name.lower() else "LLaVA"
+            print(f"Loading {model_type} model: {self.model_name}")
             self.base_model = AutoModelForVision2Seq.from_pretrained(
                 self.model_name,
-                torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-                low_cpu_mem_usage=True
+                **model_kwargs
             )
 
+            # Prepare for k-bit training if using quantization
+            if self.use_quantization:
+                self.base_model = prepare_model_for_kbit_training(self.base_model)
+
             # Apply LoRA
-            print("Applying LoRA adapters...")
+            print(f"Applying LoRA adapters (r={self.lora_config['r']})...")
             peft_config = LoraConfig(**self.lora_config)
             self.model = get_peft_model(self.base_model, peft_config)
-            self.model.to(self.device)
+
+            if not self.use_quantization:
+                self.model.to(self.device)
 
             # Print trainable parameters
             self.model.print_trainable_parameters()
 
+            # Print memory usage
+            if torch.cuda.is_available():
+                memory_gb = torch.cuda.max_memory_allocated() / 1024**3
+                print(f"GPU Memory usage: {memory_gb:.2f} GB")
+
         except Exception as e:
-            print(f"Failed to load PyTorch LLaVA. Falling back to API mode: {e}")
+            print(f"Failed to load PyTorch model. Falling back to API mode: {e}")
             self.model = None
             self.api_mode = True
 
