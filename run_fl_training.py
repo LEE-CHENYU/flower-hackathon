@@ -12,6 +12,9 @@ from multiprocessing import Process
 import signal
 import os
 
+# Silence tokenizers warning
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 # Add project to path
 sys.path.append(str(Path(__file__).parent))
 
