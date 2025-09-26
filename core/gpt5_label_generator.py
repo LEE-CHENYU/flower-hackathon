@@ -73,7 +73,7 @@ class GPT5LabelGenerator:
             except Exception as e:
                 # Fallback to GPT-4 if GPT-5 not available
                 print(f"GPT-5 not available, falling back to GPT-4: {e}")
-                self.model = "gpt-4-vision-preview"
+                self.model = "gpt-4o"
                 response = self.client.chat.completions.create(
                     model=self.model,
                     messages=[

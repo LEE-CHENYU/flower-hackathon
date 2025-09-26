@@ -1,0 +1,20 @@
+[
+  {
+    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/test/2018.10_2018.08.29_first.JPG",
+    "diagnosis": "",
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
+    "status": "failed"
+  },
+  {
+    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/test/2018.14_2018.07.20_first.JPG",
+    "diagnosis": "",
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
+    "status": "failed"
+  },
+  {
+    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/test/2018.14_2019.05.13_first.JPG",
+    "diagnosis": "",
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
+    "status": "failed"
+  }
+]
