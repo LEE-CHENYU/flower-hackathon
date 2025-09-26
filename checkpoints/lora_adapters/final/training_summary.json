@@ -1,8 +1,8 @@
 [
   {
     "round": 1,
-    "avg_loss": 0.1,
+    "avg_loss": 0.0,
     "num_clients": 2,
-    "total_samples": 10
+    "total_samples": 2
   }
 ]

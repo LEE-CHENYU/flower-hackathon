@@ -1,0 +1,17 @@
+[
+  {
+    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/train/2018.89_2022.07.19_first.JPG",
+    "diagnosis": "Test diagnosis: The dental image shows healthy teeth with no visible cavities.",
+    "status": "success"
+  },
+  {
+    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/train/2018.29_2018.08.02_first.JPG",
+    "diagnosis": "Test diagnosis: The dental image shows healthy teeth with no visible cavities.",
+    "status": "success"
+  },
+  {
+    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/train/2021.109_2021.11.03_first.JPG",
+    "diagnosis": "Test diagnosis: The dental image shows healthy teeth with no visible cavities.",
+    "status": "success"
+  }
+]

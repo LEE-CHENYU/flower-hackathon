@@ -60,71 +60,103 @@ class LLaVALoRAModel:
 
     def _load_model(self):
         """Load LLaVA model and apply LoRA with optional quantization"""
-        # Quick check if we should use API mode to save time
-        import os
-        if os.getenv("USE_API_MODE", "false").lower() == "true":
-            print(f"Using API mode as requested via USE_API_MODE env var")
-            self.model = None
-            self.api_mode = True
-            return
+        models_to_try = []
 
-        try:
-            # Load tokenizer and processor
-            self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-            self.processor = AutoProcessor.from_pretrained(self.model_name)
+        # First try the requested model
+        models_to_try.append({
+            "name": self.model_name,
+            "use_quantization": self.use_quantization,
+            "quantization_bits": self.quantization_bits
+        })
 
-            # Configure quantization if requested
-            if self.use_quantization and torch.cuda.is_available():
-                print(f"Loading with {self.quantization_bits}-bit quantization (QLoRA)")
-                bnb_config = BitsAndBytesConfig(
-                    load_in_4bit=(self.quantization_bits == 4),
-                    load_in_8bit=(self.quantization_bits == 8),
-                    bnb_4bit_compute_dtype=torch.float16,
-                    bnb_4bit_use_double_quant=True,
-                    bnb_4bit_quant_type="nf4"
+        # Add fallback to llava-7b-qlora if TinyLLaVA fails
+        if "tiny" in self.model_name.lower():
+            models_to_try.append({
+                "name": "llava-hf/llava-1.5-7b-hf",
+                "use_quantization": True,
+                "quantization_bits": 4
+            })
+
+        last_error = None
+        for model_config in models_to_try:
+            try:
+                print(f"Attempting to load: {model_config['name']}")
+                self.model_name = model_config["name"]
+                self.use_quantization = model_config["use_quantization"]
+                self.quantization_bits = model_config["quantization_bits"]
+
+                # Load tokenizer and processor
+                self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+                self.processor = AutoProcessor.from_pretrained(self.model_name)
+
+                # Fix for processor patch_size issue
+                if hasattr(self.processor, 'patch_size') and self.processor.patch_size is None:
+                    self.processor.patch_size = 14  # Default patch size for vision transformers
+
+                # Configure quantization if requested
+                if self.use_quantization and torch.cuda.is_available():
+                    print(f"Loading with {self.quantization_bits}-bit quantization (QLoRA)")
+                    bnb_config = BitsAndBytesConfig(
+                        load_in_4bit=(self.quantization_bits == 4),
+                        load_in_8bit=(self.quantization_bits == 8),
+                        bnb_4bit_compute_dtype=torch.float16,
+                        bnb_4bit_use_double_quant=True,
+                        bnb_4bit_quant_type="nf4"
+                    )
+                    model_kwargs = {
+                        "quantization_config": bnb_config,
+                        "device_map": "auto"
+                    }
+                else:
+                    model_kwargs = {
+                        "torch_dtype": torch.float16 if torch.cuda.is_available() else torch.float32,
+                        "low_cpu_mem_usage": True
+                    }
+
+                # Load base model
+                model_type = "TinyLLaVA" if "tiny" in self.model_name.lower() else "LLaVA"
+                print(f"Loading {model_type} model: {self.model_name}")
+                self.base_model = AutoModelForVision2Seq.from_pretrained(
+                    self.model_name,
+                    **model_kwargs
                 )
-                model_kwargs = {
-                    "quantization_config": bnb_config,
-                    "device_map": "auto"
-                }
-            else:
-                model_kwargs = {
-                    "torch_dtype": torch.float16 if torch.cuda.is_available() else torch.float32,
-                    "low_cpu_mem_usage": True
-                }
 
-            # Load base model
-            model_type = "TinyLLaVA" if "tiny" in self.model_name.lower() else "LLaVA"
-            print(f"Loading {model_type} model: {self.model_name}")
-            self.base_model = AutoModelForVision2Seq.from_pretrained(
-                self.model_name,
-                **model_kwargs
-            )
+                # Prepare for k-bit training if using quantization
+                if self.use_quantization:
+                    self.base_model = prepare_model_for_kbit_training(self.base_model)
 
-            # Prepare for k-bit training if using quantization
-            if self.use_quantization:
-                self.base_model = prepare_model_for_kbit_training(self.base_model)
+                # Apply LoRA
+                print(f"Applying LoRA adapters (r={self.lora_config['r']})...")
+                peft_config = LoraConfig(**self.lora_config)
+                self.model = get_peft_model(self.base_model, peft_config)
 
-            # Apply LoRA
-            print(f"Applying LoRA adapters (r={self.lora_config['r']})...")
-            peft_config = LoraConfig(**self.lora_config)
-            self.model = get_peft_model(self.base_model, peft_config)
+                if not self.use_quantization:
+                    self.model.to(self.device)
 
-            if not self.use_quantization:
-                self.model.to(self.device)
+                # Print trainable parameters
+                self.model.print_trainable_parameters()
 
-            # Print trainable parameters
-            self.model.print_trainable_parameters()
+                # Print memory usage
+                if torch.cuda.is_available():
+                    memory_gb = torch.cuda.max_memory_allocated() / 1024**3
+                    print(f"GPU Memory usage: {memory_gb:.2f} GB")
 
-            # Print memory usage
-            if torch.cuda.is_available():
-                memory_gb = torch.cuda.max_memory_allocated() / 1024**3
-                print(f"GPU Memory usage: {memory_gb:.2f} GB")
+                # Success! Break out of the loop
+                print(f"✓ Successfully loaded {model_type} model")
+                return
 
-        except Exception as e:
-            print(f"Failed to load PyTorch model. Falling back to API mode: {e}")
-            self.model = None
-            self.api_mode = True
+            except Exception as e:
+                last_error = e
+                print(f"Failed to load {model_config['name']}: {e}")
+                if model_config != models_to_try[-1]:
+                    print("Trying fallback model...")
+                continue
+
+        # If we get here, all models failed
+        print(f"All model loading attempts failed")
+        self.model = None
+        self.api_mode = False
+        raise RuntimeError(f"Model loading failed: {last_error}")
 
     def prepare_inputs(self, image_path: str, text: str) -> Dict:
         """Prepare inputs for the model"""
@@ -147,44 +179,38 @@ class LLaVALoRAModel:
         if self.model is not None:
             return self.model(**inputs)
         else:
-            # API mode - simulate loss for training
-            return torch.tensor(0.1, requires_grad=True)
+            raise RuntimeError("Model not loaded - cannot perform forward pass")
 
     def train_step(self, batch: List[Tuple[str, str]], optimizer: torch.optim.Optimizer) -> float:
         """Single training step"""
+        if self.model is None:
+            raise RuntimeError("Model not loaded - cannot train")
+
         total_loss = 0.0
-        self.model.train() if self.model else None
+        self.model.train()
 
         for image_path, label_text in batch:
             inputs = self.prepare_inputs(image_path, label_text)
 
-            if self.model is not None:
-                # Zero gradients
-                optimizer.zero_grad()
+            # Zero gradients
+            optimizer.zero_grad()
 
-                # Forward pass
-                outputs = self.forward(inputs)
-                loss = outputs.loss
+            # Forward pass
+            outputs = self.forward(inputs)
+            loss = outputs.loss
 
-                # Backward pass
-                loss.backward()
-                optimizer.step()
+            # Backward pass
+            loss.backward()
+            optimizer.step()
 
-                total_loss += loss.item()
-            else:
-                # API mode - simulate training
-                total_loss += 0.1
+            total_loss += loss.item()
 
         return total_loss / len(batch)
 
     def get_lora_weights(self) -> Dict[str, np.ndarray]:
         """Extract LoRA weights for federated aggregation"""
         if self.model is None:
-            # Return dummy weights in API mode
-            return {
-                "lora_a": np.random.randn(16, 768).astype(np.float32),
-                "lora_b": np.random.randn(768, 16).astype(np.float32)
-            }
+            raise RuntimeError("Model not loaded - cannot get weights")
 
         lora_weights = {}
         for name, param in self.model.named_parameters():

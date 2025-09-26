@@ -52,9 +52,28 @@ class DentalFLClient(fl.client.NumPyClient):
             quantization_bits=config.get("quantization_bits", 4)
         )
 
-        # Initialize data loader
+        # Initialize data loader - use first_images_dataset for faster training
+        first_images_path = Path("/Users/chenyusu/flower-hackathon/first_images_dataset")
+        if first_images_path.exists():
+            print(f"Client {client_id}: Using extracted first_images_dataset")
+            data_path = str(first_images_path)
+
         self.dataset = FirstPhotoDataset(data_path)
         self.image_paths = [item[0] for item in self.dataset.image_paths]
+
+        # Limit to subset for each client to reduce costs and training time
+        # Use only 3 images per client for testing
+        images_per_client = 3
+        start_idx = client_id * images_per_client
+        end_idx = min(start_idx + images_per_client, len(self.image_paths))
+
+        if start_idx < len(self.image_paths):
+            self.image_paths = self.image_paths[start_idx:end_idx]
+            print(f"Client {client_id}: Using {len(self.image_paths)} images from index {start_idx} to {end_idx}")
+        else:
+            # If we run out of images, wrap around
+            self.image_paths = self.image_paths[:images_per_client]
+            print(f"Client {client_id}: Using first {len(self.image_paths)} images (wrapped)")
 
         # Initialize label generator
         self.label_generator = GPT5LabelGenerator()
@@ -75,17 +94,8 @@ class DentalFLClient(fl.client.NumPyClient):
         """Generate or load training labels"""
         labels_file = f"data/labels_client_{self.client_id}.json"
 
-        # For API mode testing, use dummy labels
-        if hasattr(self.model, 'api_mode') and self.model.api_mode:
-            print(f"Client {self.client_id}: Using dummy labels for API mode testing")
-            # Create dummy training pairs for testing
-            sample_size = min(5, len(self.image_paths))
-            self.training_pairs = [
-                (img_path, f"Dummy dental diagnosis for image {i}")
-                for i, img_path in enumerate(self.image_paths[:sample_size])
-            ]
-            print(f"Client {self.client_id}: Created {len(self.training_pairs)} dummy training pairs")
-            return
+        # Create data directory if it doesn't exist
+        Path("data").mkdir(exist_ok=True)
 
         if Path(labels_file).exists():
             print(f"Client {self.client_id}: Loading existing labels from {labels_file}")
@@ -94,9 +104,8 @@ class DentalFLClient(fl.client.NumPyClient):
                 self.labels = json.load(f)
         else:
             print(f"Client {self.client_id}: Generating labels with GPT-5...")
-            # Generate labels for subset of images (to save API costs)
-            sample_size = min(10, len(self.image_paths))
-            sample_images = self.image_paths[:sample_size]
+            # Generate labels for all client images (already limited to 3)
+            sample_images = self.image_paths
 
             self.labels = self.label_generator.generate_batch_labels(
                 sample_images,

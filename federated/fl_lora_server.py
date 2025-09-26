@@ -166,15 +166,30 @@ class DentalFLServer:
         # Initialize dummy model for initial parameters
         print("Initializing server model for parameter initialization...")
         from core.model_configs import get_model_config
+
+        # Try TinyLLaVA first, with automatic fallback to llava-7b-qlora
         config = get_model_config("tiny-llava")
-        self.model = LLaVALoRAModel(
-            model_name=config["model_name"],
-            lora_config=config.get("lora_config"),
-            use_quantization=config.get("use_quantization", False),
-            quantization_bits=config.get("quantization_bits", 4)
-        )
-        initial_params = self.model.get_lora_weights()
-        initial_ndarrays = list(initial_params.values())
+        try:
+            self.model = LLaVALoRAModel(
+                model_name=config["model_name"],
+                lora_config=config.get("lora_config"),
+                use_quantization=config.get("use_quantization", False),
+                quantization_bits=config.get("quantization_bits", 4)
+            )
+        except RuntimeError as e:
+            print(f"Server initialization with TinyLLaVA failed: {e}")
+            print("Server will wait for client parameters instead")
+            # Create dummy initial parameters
+            import numpy as np
+            initial_ndarrays = [
+                np.zeros((8, 768), dtype=np.float32),  # Dummy LoRA weights
+                np.zeros((768, 8), dtype=np.float32)
+            ]
+            self.model = None
+
+        if self.model is not None:
+            initial_params = self.model.get_lora_weights()
+            initial_ndarrays = list(initial_params.values())
 
         # Configure strategy
         self.strategy = LoRAFedAvg(
