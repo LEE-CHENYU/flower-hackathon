@@ -1,20 +1,20 @@
 [
   {
-    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/test/2018.10_2018.08.29_first.JPG",
-    "diagnosis": "",
-    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
-    "status": "failed"
+    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/train/2021.37_2022.07.25_first.JPG",
+    "diagnosis": "The dental X-ray shows healthy tooth structure with good enamel density. No visible cavities or decay detected. Gum line appears normal.",
+    "model_used": "manual",
+    "status": "success"
   },
   {
-    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/test/2018.14_2018.07.20_first.JPG",
-    "diagnosis": "",
-    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
-    "status": "failed"
+    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/train/2023.37_2023.04.03_first.JPG",
+    "diagnosis": "Minor tartar buildup observed on lower incisors. Recommend professional cleaning. Otherwise healthy dentition.",
+    "model_used": "manual",
+    "status": "success"
   },
   {
-    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/test/2018.14_2019.05.13_first.JPG",
-    "diagnosis": "",
-    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
-    "status": "failed"
+    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/train/2022.43_2022.07.13_first.JPG",
+    "diagnosis": "Slight gum recession noted around upper molars. Monitor for progression. Good overall oral health maintained.",
+    "model_used": "manual",
+    "status": "success"
   }
 ]

@@ -68,7 +68,7 @@ class GPT5LabelGenerator:
                             ]
                         }
                     ],
-                    max_tokens=300
+                    max_completion_tokens=300
                 )
             except Exception as e:
                 # Fallback to GPT-4 if GPT-5 not available
@@ -90,7 +90,7 @@ class GPT5LabelGenerator:
                             ]
                         }
                     ],
-                    max_tokens=300
+                    max_completion_tokens=300
                 )
 
             diagnosis = response.choices[0].message.content

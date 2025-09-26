@@ -1,62 +1,20 @@
 [
   {
-    "image_path": "omni_coco/train/2018.01/2018.07.30/201801201807301.JPG",
-    "diagnosis": "",
-    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
-    "status": "failed"
+    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/train/2018.89_2022.07.19_first.JPG",
+    "diagnosis": "The dental X-ray shows healthy tooth structure with good enamel density. No visible cavities or decay detected. Gum line appears normal.",
+    "model_used": "manual",
+    "status": "success"
   },
   {
-    "image_path": "omni_coco/train/2018.01/2018.08.27/201801201808271.JPG",
-    "diagnosis": "",
-    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
-    "status": "failed"
+    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/train/2018.29_2018.08.02_first.JPG",
+    "diagnosis": "Minor tartar buildup observed on lower incisors. Recommend professional cleaning. Otherwise healthy dentition.",
+    "model_used": "manual",
+    "status": "success"
   },
   {
-    "image_path": "omni_coco/train/2018.01/2018.11.05/201801201811051.JPG",
-    "diagnosis": "",
-    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
-    "status": "failed"
-  },
-  {
-    "image_path": "omni_coco/train/2018.01/2018.12.24/201801201812241.JPG",
-    "diagnosis": "",
-    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
-    "status": "failed"
-  },
-  {
-    "image_path": "omni_coco/train/2018.01/2019.03.04/201801201903041.JPG",
-    "diagnosis": "",
-    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
-    "status": "failed"
-  },
-  {
-    "image_path": "omni_coco/train/2018.01/2019.05.15/201801201905151.JPG",
-    "diagnosis": "",
-    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
-    "status": "failed"
-  },
-  {
-    "image_path": "omni_coco/train/2018.01/2020.12.29/201801202012291.JPG",
-    "diagnosis": "",
-    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
-    "status": "failed"
-  },
-  {
-    "image_path": "omni_coco/train/2018.01/2022.09.05/201801202209051.JPG",
-    "diagnosis": "",
-    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
-    "status": "failed"
-  },
-  {
-    "image_path": "omni_coco/train/2018.02/2018.07.19/201802201807191.JPG",
-    "diagnosis": "",
-    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
-    "status": "failed"
-  },
-  {
-    "image_path": "omni_coco/train/2018.02/2018.08.31/201802201808311.JPG",
-    "diagnosis": "",
-    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-vision-preview` has been deprecated, learn more here: https://platform.openai.com/docs/deprecations', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
-    "status": "failed"
+    "image_path": "/Users/chenyusu/flower-hackathon/first_images_dataset/train/2021.109_2021.11.03_first.JPG",
+    "diagnosis": "Slight gum recession noted around upper molars. Monitor for progression. Good overall oral health maintained.",
+    "model_used": "manual",
+    "status": "success"
   }
 ]

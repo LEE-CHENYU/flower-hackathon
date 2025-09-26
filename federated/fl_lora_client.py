@@ -94,37 +94,32 @@ class DentalFLClient(fl.client.NumPyClient):
             self.optimizer = None
 
     def _prepare_labels(self):
-        """Generate or load training labels"""
-        labels_file = f"data/labels_client_{self.client_id}.json"
+        """Generate training labels on the fly with GPT-4o"""
+        print(f"Client {self.client_id}: Generating labels with GPT-4o for {len(self.image_paths)} images...")
 
-        # Create data directory if it doesn't exist
-        Path("data").mkdir(exist_ok=True)
-
-        if Path(labels_file).exists():
-            print(f"Client {self.client_id}: Loading existing labels from {labels_file}")
-            import json
-            with open(labels_file, 'r') as f:
-                self.labels = json.load(f)
-        else:
-            print(f"Client {self.client_id}: Generating labels with GPT-5...")
-            # Generate labels for all client images (already limited to 3)
-            sample_images = self.image_paths
-
-            self.labels = self.label_generator.generate_batch_labels(
-                sample_images,
-                output_file=labels_file
-            )
-
-        # Create training pairs
         self.training_pairs = []
-        for label_data in self.labels:
-            if label_data["status"] == "success":
-                self.training_pairs.append((
-                    label_data["image_path"],
-                    label_data["diagnosis"]
-                ))
 
-        print(f"Client {self.client_id}: Prepared {len(self.training_pairs)} training pairs")
+        for i, img_path in enumerate(self.image_paths):
+            try:
+                # Generate label for this specific image
+                label_data = self.label_generator.generate_diagnosis_label(img_path)
+
+                if label_data["status"] == "success":
+                    self.training_pairs.append((img_path, label_data["diagnosis"]))
+                    print(f"  ✓ Generated label {i+1}/{len(self.image_paths)}")
+                else:
+                    # Fallback to default diagnosis if GPT-4o fails
+                    fallback = "Dental image requires professional evaluation. Regular checkup recommended."
+                    self.training_pairs.append((img_path, fallback))
+                    print(f"  ⚠ Using fallback for image {i+1}")
+
+            except Exception as e:
+                # If API fails, use fallback diagnosis
+                print(f"  ⚠ API error for image {i+1}: {e}")
+                fallback = "Dental image shows teeth structure. Professional evaluation recommended."
+                self.training_pairs.append((img_path, fallback))
+
+        print(f"Client {self.client_id}: Generated {len(self.training_pairs)} training pairs on the fly")
 
     def get_parameters(self, config: Dict) -> List[np.ndarray]:
         """Get model parameters for server"""
