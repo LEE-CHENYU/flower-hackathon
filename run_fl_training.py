@@ -57,11 +57,11 @@ def run_simulation(num_clients: int = 3, rounds: int = 10, local_epochs: int = 1
         server_process.start()
         processes.append(server_process)
 
-        # Wait for server to initialize
+        # Wait longer for server to fully initialize
         print("Waiting for server to initialize...")
-        time.sleep(5)
+        time.sleep(10)  # Increased wait time
 
-        # Start clients
+        # Start clients with better error handling
         for client_id in range(num_clients):
             client_process = Process(
                 target=run_client,
@@ -69,7 +69,7 @@ def run_simulation(num_clients: int = 3, rounds: int = 10, local_epochs: int = 1
             )
             client_process.start()
             processes.append(client_process)
-            time.sleep(2)  # Stagger client starts
+            time.sleep(3)  # More stagger between clients
 
         print(f"\n{'='*60}")
         print(f"Federated Learning Started")
