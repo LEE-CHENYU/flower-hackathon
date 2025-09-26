@@ -13,7 +13,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 from core.llava_lora_model import LLaVALoRAModel
 from core.gpt5_label_generator import GPT5LabelGenerator
 from core.model_configs import get_model_config
-from data_loader import FirstPhotoDataset
+from simple_data_loader import SimpleImageDataset
 
 class DentalFLClient(fl.client.NumPyClient):
     def __init__(
@@ -57,8 +57,11 @@ class DentalFLClient(fl.client.NumPyClient):
         if first_images_path.exists():
             print(f"Client {client_id}: Using extracted first_images_dataset")
             data_path = str(first_images_path)
+        else:
+            # Fallback to original dataset
+            data_path = str(Path(data_path).absolute())
 
-        self.dataset = FirstPhotoDataset(data_path)
+        self.dataset = SimpleImageDataset(data_path)
         self.image_paths = [item[0] for item in self.dataset.image_paths]
 
         # Limit to subset for each client to reduce costs and training time
