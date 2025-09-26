@@ -169,6 +169,11 @@ class LLaVALoRAModel:
             # PyTorch mode
             inputs = self.processor(text=prompt, images=image, return_tensors="pt")
             inputs = {k: v.to(self.device) for k, v in inputs.items()}
+
+            # For training, we need to add labels (same as input_ids for language modeling)
+            # This allows the model to compute loss
+            inputs["labels"] = inputs["input_ids"].clone()
+
             return inputs
         else:
             # API mode fallback
@@ -242,10 +247,15 @@ class LLaVALoRAModel:
     def load_lora_adapter(self, load_path: str):
         """Load LoRA adapter weights"""
         if self.model is not None:
-            from peft import PeftModel
-            self.model = PeftModel.from_pretrained(self.base_model, load_path)
-            self.model.to(self.device)
-            print(f"LoRA adapter loaded from {load_path}")
+            if Path(load_path).exists() and (Path(load_path) / "adapter_config.json").exists():
+                from peft import PeftModel
+                self.model = PeftModel.from_pretrained(self.base_model, load_path)
+                self.model.to(self.device)
+                print(f"LoRA adapter loaded from {load_path}")
+            else:
+                print(f"No LoRA adapter found at {load_path}, using base model")
+        else:
+            print("Model not loaded, cannot load adapter")
 
     def generate_diagnosis(self, image_path: str, max_length: int = 200) -> str:
         """Generate diagnosis for a dental image"""
