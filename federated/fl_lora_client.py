@@ -54,7 +54,7 @@ class DentalFLClient(fl.client.NumPyClient):
 
         # Initialize data loader
         self.dataset = FirstPhotoDataset(data_path)
-        self.image_paths = [item[1] for item in self.dataset.first_photos]
+        self.image_paths = [item[0] for item in self.dataset.image_paths]
 
         # Initialize label generator
         self.label_generator = GPT5LabelGenerator()
@@ -74,6 +74,18 @@ class DentalFLClient(fl.client.NumPyClient):
     def _prepare_labels(self):
         """Generate or load training labels"""
         labels_file = f"data/labels_client_{self.client_id}.json"
+
+        # For API mode testing, use dummy labels
+        if hasattr(self.model, 'api_mode') and self.model.api_mode:
+            print(f"Client {self.client_id}: Using dummy labels for API mode testing")
+            # Create dummy training pairs for testing
+            sample_size = min(5, len(self.image_paths))
+            self.training_pairs = [
+                (img_path, f"Dummy dental diagnosis for image {i}")
+                for i, img_path in enumerate(self.image_paths[:sample_size])
+            ]
+            print(f"Client {self.client_id}: Created {len(self.training_pairs)} dummy training pairs")
+            return
 
         if Path(labels_file).exists():
             print(f"Client {self.client_id}: Loading existing labels from {labels_file}")
@@ -148,12 +160,13 @@ class DentalFLClient(fl.client.NumPyClient):
         updated_parameters = self.get_parameters(config)
 
         # Return metrics
+        num_samples = max(1, len(self.training_pairs))  # Ensure at least 1
         metrics = {
             "loss": float(avg_loss),
-            "num_samples": len(self.training_pairs)
+            "num_samples": num_samples
         }
 
-        return updated_parameters, len(self.training_pairs), metrics
+        return updated_parameters, num_samples, metrics
 
     def evaluate(self, parameters: List[np.ndarray], config: Dict) -> Tuple[float, int, Dict]:
         """Evaluate model on local data"""

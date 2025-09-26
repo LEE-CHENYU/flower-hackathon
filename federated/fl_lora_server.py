@@ -165,7 +165,14 @@ class DentalFLServer:
 
         # Initialize dummy model for initial parameters
         print("Initializing server model for parameter initialization...")
-        self.model = LLaVALoRAModel()
+        from core.model_configs import get_model_config
+        config = get_model_config("tiny-llava")
+        self.model = LLaVALoRAModel(
+            model_name=config["model_name"],
+            lora_config=config.get("lora_config"),
+            use_quantization=config.get("use_quantization", False),
+            quantization_bits=config.get("quantization_bits", 4)
+        )
         initial_params = self.model.get_lora_weights()
         initial_ndarrays = list(initial_params.values())
 

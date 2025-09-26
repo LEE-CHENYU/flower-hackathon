@@ -113,11 +113,17 @@ def evaluate_model(checkpoint_path: str = "checkpoints/lora_adapters/final"):
 
         # Load model with fine-tuned LoRA
         model = LLaVALoRAModel()
-        model.load_lora_adapter(checkpoint_path)
+
+        # Check if checkpoint exists before loading
+        if Path(checkpoint_path).exists():
+            model.load_lora_adapter(checkpoint_path)
+            print(f"Loaded fine-tuned model from {checkpoint_path}")
+        else:
+            print(f"No checkpoint found at {checkpoint_path}, using base model")
 
         # Load test images
         dataset = FirstPhotoDataset("omni_coco")
-        test_images = [item[1] for item in dataset.first_photos[:5]]
+        test_images = [item[0] for item in dataset.image_paths[:5]]  # Fixed attribute name
 
         # Generate diagnoses
         print("\nGenerating diagnoses for test images:")

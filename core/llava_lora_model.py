@@ -9,7 +9,7 @@ from typing import Dict, List, Tuple, Optional
 import numpy as np
 from pathlib import Path
 from transformers import AutoModelForVision2Seq, AutoTokenizer, AutoProcessor, BitsAndBytesConfig
-from peft import LoraConfig, get_peft_model, TaskType, prepare_model_for_kbit_training
+from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from PIL import Image
 import json
 
@@ -43,8 +43,7 @@ class LLaVALoRAModel:
                 "lora_alpha": 16,
                 "target_modules": ["q_proj", "v_proj", "k_proj", "o_proj"],
                 "lora_dropout": 0.05,
-                "bias": "none",
-                "task_type": TaskType.VISION2SEQ_LM,
+                "bias": "none"
             }
         else:
             # Standard config for larger models
@@ -53,8 +52,7 @@ class LLaVALoRAModel:
                 "lora_alpha": 32,
                 "target_modules": ["q_proj", "v_proj", "k_proj", "o_proj"],
                 "lora_dropout": 0.05,
-                "bias": "none",
-                "task_type": TaskType.VISION2SEQ_LM,
+                "bias": "none"
             }
 
         self.lora_config = lora_config if lora_config else default_lora_config
@@ -62,6 +60,14 @@ class LLaVALoRAModel:
 
     def _load_model(self):
         """Load LLaVA model and apply LoRA with optional quantization"""
+        # Quick check if we should use API mode to save time
+        import os
+        if os.getenv("USE_API_MODE", "false").lower() == "true":
+            print(f"Using API mode as requested via USE_API_MODE env var")
+            self.model = None
+            self.api_mode = True
+            return
+
         try:
             # Load tokenizer and processor
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
