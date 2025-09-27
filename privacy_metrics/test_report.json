@@ -1,0 +1,38 @@
+{
+  "configuration": {
+    "secure_aggregation": {
+      "enabled": false,
+      "threshold": 2
+    },
+    "authentication": {
+      "enabled": true,
+      "require_certificates": false
+    },
+    "communication": {
+      "tls_enabled": true,
+      "cert_path": null,
+      "key_path": null
+    },
+    "privacy_tracking": {
+      "track_metrics": true,
+      "log_events": true
+    },
+    "client_privacy": {
+      "local_privacy": true,
+      "sanitize_labels": true
+    }
+  },
+  "metrics": {
+    "rounds_completed": 0,
+    "secure_aggregations": 0,
+    "authenticated_clients": "set()",
+    "privacy_violations": 0
+  },
+  "events": [
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Generated auth token for client 0"
+    }
+  ],
+  "constraints_satisfied": false
+}
