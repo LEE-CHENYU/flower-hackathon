@@ -1,0 +1,202 @@
+{
+  "configuration": {
+    "secure_aggregation": {
+      "enabled": true,
+      "threshold": 2
+    },
+    "authentication": {
+      "enabled": true,
+      "require_certificates": false
+    },
+    "communication": {
+      "tls_enabled": true,
+      "cert_path": null,
+      "key_path": null
+    },
+    "privacy_tracking": {
+      "track_metrics": true,
+      "log_events": true
+    },
+    "client_privacy": {
+      "local_privacy": true,
+      "sanitize_labels": true
+    }
+  },
+  "metrics": {
+    "rounds_completed": 5,
+    "secure_aggregations": 5,
+    "authenticated_clients": "{0, 1, 2}",
+    "privacy_violations": 0
+  },
+  "events": [
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Registered client 0"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Registered client 1"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Registered client 2"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Initialized privacy tracking for round 1"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Applied secure aggregation masking for client 2"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Generated auth token for client 2"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Completed secure aggregation for 1 clients"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Finalized privacy tracking for round 1"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Initialized privacy tracking for round 2"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Applied secure aggregation masking for client 0"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Generated auth token for client 0"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Applied secure aggregation masking for client 1"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Generated auth token for client 1"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Applied secure aggregation masking for client 2"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Generated auth token for client 2"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Completed secure aggregation for 3 clients"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Finalized privacy tracking for round 2"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Initialized privacy tracking for round 3"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Applied secure aggregation masking for client 0"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Generated auth token for client 0"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Applied secure aggregation masking for client 1"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Generated auth token for client 1"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Applied secure aggregation masking for client 2"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Generated auth token for client 2"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Completed secure aggregation for 3 clients"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Finalized privacy tracking for round 3"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Initialized privacy tracking for round 4"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Applied secure aggregation masking for client 0"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Generated auth token for client 0"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Applied secure aggregation masking for client 1"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Generated auth token for client 1"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Completed secure aggregation for 2 clients"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Finalized privacy tracking for round 4"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Initialized privacy tracking for round 5"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Applied secure aggregation masking for client 0"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Generated auth token for client 0"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Applied secure aggregation masking for client 1"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Generated auth token for client 1"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Applied secure aggregation masking for client 2"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Generated auth token for client 2"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Completed secure aggregation for 3 clients"
+    },
+    {
+      "timestamp": "1758936069.7834926",
+      "event": "Finalized privacy tracking for round 5"
+    }
+  ],
+  "constraints_satisfied": true
+}
