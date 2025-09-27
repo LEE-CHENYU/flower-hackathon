@@ -1,34 +1,34 @@
 {
   "round": 5,
-  "timestamp": "2025-09-26T16:46:07.667774",
+  "timestamp": "2025-09-26T17:23:56.136131",
   "metrics_history": [
     {
       "round": 1,
-      "avg_loss": 11.862447738647461,
+      "avg_loss": 7.207242568333943,
       "num_clients": 2,
       "total_samples": 6
     },
     {
       "round": 2,
-      "avg_loss": 11.394248644510904,
+      "avg_loss": 6.882841110229492,
       "num_clients": 3,
       "total_samples": 9
     },
     {
       "round": 3,
-      "avg_loss": 10.822348170810276,
+      "avg_loss": 6.565175003475613,
       "num_clients": 3,
       "total_samples": 9
     },
     {
       "round": 4,
-      "avg_loss": 10.258115768432617,
+      "avg_loss": 6.251643657684326,
       "num_clients": 3,
       "total_samples": 9
     },
     {
       "round": 5,
-      "avg_loss": 9.7792264090644,
+      "avg_loss": 5.983730634053548,
       "num_clients": 3,
       "total_samples": 9
     }

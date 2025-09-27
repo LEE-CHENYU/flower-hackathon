@@ -249,7 +249,21 @@ class DentalFLServer:
         # Copy latest checkpoint
         checkpoints = list(Path("checkpoints/lora_adapters").glob("round_*"))
         if checkpoints:
-            latest = max(checkpoints, key=lambda p: int(p.name.split("_")[1]))
+            # Extract round number safely, ignoring invalid formats
+            def get_round_number(p):
+                try:
+                    parts = p.name.split("_")
+                    if len(parts) >= 2 and parts[1].isdigit():
+                        return int(parts[1])
+                except:
+                    pass
+                return -1
+
+            valid_checkpoints = [cp for cp in checkpoints if get_round_number(cp) >= 0]
+            if valid_checkpoints:
+                latest = max(valid_checkpoints, key=get_round_number)
+            else:
+                latest = checkpoints[0]  # Fallback to first if no valid format
             import shutil
             shutil.copytree(latest, final_path, dirs_exist_ok=True)
             print(f"\nFinal model saved to {final_path}")
