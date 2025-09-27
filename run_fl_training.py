@@ -193,7 +193,7 @@ def main():
     parser.add_argument("--local-epochs", type=int, default=1, help="Local training epochs")
     parser.add_argument("--client-id", type=int, default=0, help="Client ID (client mode)")
     parser.add_argument("--server-address", type=str, default="localhost:8080", help="Server address")
-    parser.add_argument("--data-path", type=str, default="omni_coco", help="Path to data")
+    parser.add_argument("--data-path", type=str, default="first_images_dataset", help="Path to data")
     parser.add_argument("--checkpoint", type=str, default="checkpoints/lora_adapters/final", help="Checkpoint path for evaluation")
     parser.add_argument(
         "--model-config",

@@ -1,0 +1,20 @@
+[
+  {
+    "image_path": "first_images_dataset/train/2018.29_2018.08.02_first.JPG",
+    "diagnosis": "",
+    "model_used": "gpt-5",
+    "status": "success"
+  },
+  {
+    "image_path": "first_images_dataset/train/2018.89_2022.07.19_first.JPG",
+    "diagnosis": "",
+    "model_used": "gpt-5",
+    "status": "success"
+  },
+  {
+    "image_path": "first_images_dataset/train/2021.109_2021.11.03_first.JPG",
+    "diagnosis": "",
+    "model_used": "gpt-5",
+    "status": "success"
+  }
+]

@@ -21,7 +21,7 @@ class GPT5LabelGenerator:
 
         openai.api_key = self.api_key
         self.client = openai.OpenAI(api_key=self.api_key)
-        self.model = "gpt-5"  # As requested, using gpt-5
+        self.model = "gpt-4o"
 
     def encode_image(self, image_path: str) -> str:
         """Encode image to base64 for API"""
@@ -41,57 +41,33 @@ class GPT5LabelGenerator:
         try:
             base64_image = self.encode_image(image_path)
 
-            prompt = """You are an expert dentist. Analyze this dental X-ray or photograph and provide:
-            1. Primary diagnosis
-            2. Severity assessment (mild/moderate/severe)
-            3. Observed conditions (list all visible issues)
-            4. Recommended treatment plan
-            5. Urgency level (routine/priority/urgent)
+            prompt = """You are a dental hygiene expert. Based on this dental image, provide personalized daily care suggestions:
+            1. Brushing technique recommendations specific to what you observe
+            2. Flossing tips tailored to the visible tooth spacing and gum line
+            3. Recommended oral care products (toothpaste type, mouthwash, etc.)
+            4. Dietary suggestions for better dental health
+            5. Frequency and timing of dental care routines
 
-            Format your response as a professional dental diagnosis."""
+            Focus on preventive care and daily habits. Be specific and practical."""
 
-            # Try GPT-5 first, fallback to GPT-4 if needed
-            try:
-                response = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=[
-                        {
-                            "role": "user",
-                            "content": [
-                                {"type": "text", "text": prompt},
-                                {
-                                    "type": "image_url",
-                                    "image_url": {
-                                        "url": f"data:image/jpeg;base64,{base64_image}"
-                                    }
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": prompt},
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": f"data:image/jpeg;base64,{base64_image}"
                                 }
-                            ]
-                        }
-                    ],
-                    max_completion_tokens=300
-                )
-            except Exception as e:
-                # Fallback to GPT-4 if GPT-5 not available
-                print(f"GPT-5 not available, falling back to GPT-4: {e}")
-                self.model = "gpt-4o"
-                response = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=[
-                        {
-                            "role": "user",
-                            "content": [
-                                {"type": "text", "text": prompt},
-                                {
-                                    "type": "image_url",
-                                    "image_url": {
-                                        "url": f"data:image/jpeg;base64,{base64_image}"
-                                    }
-                                }
-                            ]
-                        }
-                    ],
-                    max_completion_tokens=300
-                )
+                            }
+                        ]
+                    }
+                ],
+                max_completion_tokens=400
+            )
 
             diagnosis = response.choices[0].message.content
 

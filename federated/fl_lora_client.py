@@ -94,29 +94,29 @@ class DentalFLClient(fl.client.NumPyClient):
             self.optimizer = None
 
     def _prepare_labels(self):
-        """Generate training labels on the fly with GPT-4o"""
-        print(f"Client {self.client_id}: Generating labels with GPT-4o for {len(self.image_paths)} images...")
+        """Generate daily care suggestions on the fly with GPT-4o"""
+        print(f"Client {self.client_id}: Generating care suggestions with GPT-4o for {len(self.image_paths)} images...")
 
         self.training_pairs = []
 
         for i, img_path in enumerate(self.image_paths):
             try:
-                # Generate label for this specific image
+                # Generate care suggestions for this specific image
                 label_data = self.label_generator.generate_diagnosis_label(img_path)
 
                 if label_data["status"] == "success":
                     self.training_pairs.append((img_path, label_data["diagnosis"]))
-                    print(f"  ✓ Generated label {i+1}/{len(self.image_paths)}")
+                    print(f"  ✓ Generated care suggestions {i+1}/{len(self.image_paths)}")
                 else:
-                    # Fallback to default diagnosis if GPT-4o fails
-                    fallback = "Dental image requires professional evaluation. Regular checkup recommended."
+                    # Fallback to default care suggestions if GPT-4o fails
+                    fallback = "Brush twice daily with fluoride toothpaste, floss once daily, and use an antiseptic mouthwash. Maintain regular dental checkups every six months."
                     self.training_pairs.append((img_path, fallback))
-                    print(f"  ⚠ Using fallback for image {i+1}")
+                    print(f"  ⚠ Using fallback care suggestions for image {i+1}")
 
             except Exception as e:
-                # If API fails, use fallback diagnosis
+                # If API fails, use fallback care suggestions
                 print(f"  ⚠ API error for image {i+1}: {e}")
-                fallback = "Dental image shows teeth structure. Professional evaluation recommended."
+                fallback = "Practice good oral hygiene: brush for two minutes twice daily, floss daily between teeth, limit sugary foods, and visit your dentist regularly."
                 self.training_pairs.append((img_path, fallback))
 
         print(f"Client {self.client_id}: Generated {len(self.training_pairs)} training pairs on the fly")

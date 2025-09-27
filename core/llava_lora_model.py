@@ -274,12 +274,31 @@ class LLaVALoRAModel:
         self.model.eval()
         image = Image.open(image_path)
 
-        prompt = "USER: <image>\nAnalyze this dental image and provide a diagnosis.\nASSISTANT:"
+        # More specific prompt to avoid hallucinations
+        prompt = """USER: <image>
+Look at this dental photograph and describe ONLY what you can actually see in the image. Focus on:
+- The visible teeth and their condition
+- Gum health and color
+- Any visible dental issues like cavities, discoloration, or misalignment
+- DO NOT mention objects that are not visible in the image
+- DO NOT mention toothbrushes, dental tools, or procedures unless they are clearly visible
+Provide a factual assessment based only on what is shown.
+ASSISTANT:"""
+
         inputs = self.processor(text=prompt, images=image, return_tensors="pt")
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
 
         with torch.no_grad():
-            outputs = self.model.generate(**inputs, max_new_tokens=max_length, temperature=0.7)
+            # Reduced temperature and added repetition penalty to reduce hallucinations
+            outputs = self.model.generate(
+                **inputs,
+                max_new_tokens=max_length,
+                temperature=0.3,  # Lower temperature for less randomness
+                do_sample=True,   # Enable sampling with temperature
+                repetition_penalty=1.2,  # Penalize repetitive phrases
+                top_p=0.9,  # Nucleus sampling for better quality
+                pad_token_id=self.processor.tokenizer.pad_token_id
+            )
             diagnosis = self.processor.batch_decode(outputs, skip_special_tokens=True)[0]
 
         # Extract only the assistant's response
