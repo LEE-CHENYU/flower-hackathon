@@ -235,6 +235,25 @@ def run_privacy_client(
     )
 
 
+def run_privacy_server(
+    num_rounds: int,
+    min_clients: int,
+    privacy_config_dict: Dict,
+    model_config: str,
+    output_dir: str
+):
+    """Run privacy-enabled server (for multiprocessing)"""
+    privacy_config = PrivacyConfig.from_dict(privacy_config_dict)
+    server = PrivacyEnabledFLServer(
+        num_rounds=num_rounds,
+        min_clients=min_clients,
+        privacy_config=privacy_config,
+        model_config=model_config,
+        output_dir=output_dir
+    )
+    server.start()
+
+
 def run_privacy_fl_training(
     num_clients: int = 3,
     num_rounds: int = 5,
@@ -279,13 +298,14 @@ def run_privacy_fl_training(
     try:
         # Start server process
         server_process = Process(
-            target=lambda: PrivacyEnabledFLServer(
-                num_rounds=num_rounds,
-                min_clients=num_clients,
-                privacy_config=privacy_config,
-                model_config=model_config,
-                output_dir=output_dir
-            ).start()
+            target=run_privacy_server,
+            args=(
+                num_rounds,
+                num_clients,
+                privacy_config.to_dict(),
+                model_config,
+                output_dir
+            )
         )
         server_process.start()
         processes.append(server_process)

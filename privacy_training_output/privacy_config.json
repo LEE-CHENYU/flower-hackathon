@@ -1,0 +1,23 @@
+{
+  "secure_aggregation": {
+    "enabled": true,
+    "threshold": 2
+  },
+  "authentication": {
+    "enabled": true,
+    "require_certificates": false
+  },
+  "communication": {
+    "tls_enabled": true,
+    "cert_path": null,
+    "key_path": null
+  },
+  "privacy_tracking": {
+    "track_metrics": true,
+    "log_events": true
+  },
+  "client_privacy": {
+    "local_privacy": true,
+    "sanitize_labels": true
+  }
+}

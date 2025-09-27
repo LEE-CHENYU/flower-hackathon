@@ -1,0 +1,448 @@
+[
+  {
+    "round": 1,
+    "clients": {
+      "2": {
+        "samples": 10,
+        "labels_sanitized": 10,
+        "weight_layers": [
+          "vision_model.lora_A",
+          "vision_model.lora_B",
+          "language_model.q_proj.lora_A",
+          "language_model.q_proj.lora_B",
+          "language_model.v_proj.lora_A",
+          "language_model.v_proj.lora_B"
+        ]
+      }
+    },
+    "aggregated_weights": {
+      "vision_model.lora_A": {
+        "shape": [
+          16,
+          768
+        ],
+        "mean": 8800.104923828128,
+        "std": 1229196.0801693974
+      },
+      "vision_model.lora_B": {
+        "shape": [
+          768,
+          16
+        ],
+        "mean": 1881.5932894694004,
+        "std": 1234834.7110458775
+      },
+      "language_model.q_proj.lora_A": {
+        "shape": [
+          8,
+          4096
+        ],
+        "mean": -6475.140364227296,
+        "std": 1242856.579392906
+      },
+      "language_model.q_proj.lora_B": {
+        "shape": [
+          4096,
+          8
+        ],
+        "mean": -1856.1305228271483,
+        "std": 1239770.3835591634
+      },
+      "language_model.v_proj.lora_A": {
+        "shape": [
+          8,
+          4096
+        ],
+        "mean": -12574.666192077635,
+        "std": 1239483.262751876
+      },
+      "language_model.v_proj.lora_B": {
+        "shape": [
+          4096,
+          8
+        ],
+        "mean": 311.75695462036356,
+        "std": 1236253.0314973495
+      }
+    },
+    "privacy_satisfied": true,
+    "participating_clients": [
+      2
+    ]
+  },
+  {
+    "round": 2,
+    "clients": {
+      "0": {
+        "samples": 10,
+        "labels_sanitized": 10,
+        "weight_layers": [
+          "vision_model.lora_A",
+          "vision_model.lora_B",
+          "language_model.q_proj.lora_A",
+          "language_model.q_proj.lora_B",
+          "language_model.v_proj.lora_A",
+          "language_model.v_proj.lora_B"
+        ]
+      },
+      "1": {
+        "samples": 10,
+        "labels_sanitized": 10,
+        "weight_layers": [
+          "vision_model.lora_A",
+          "vision_model.lora_B",
+          "language_model.q_proj.lora_A",
+          "language_model.q_proj.lora_B",
+          "language_model.v_proj.lora_A",
+          "language_model.v_proj.lora_B"
+        ]
+      },
+      "2": {
+        "samples": 10,
+        "labels_sanitized": 20,
+        "weight_layers": [
+          "vision_model.lora_A",
+          "vision_model.lora_B",
+          "language_model.q_proj.lora_A",
+          "language_model.q_proj.lora_B",
+          "language_model.v_proj.lora_A",
+          "language_model.v_proj.lora_B"
+        ]
+      }
+    },
+    "aggregated_weights": {
+      "vision_model.lora_A": {
+        "shape": [
+          16,
+          768
+        ],
+        "mean": -1431754.1317021486,
+        "std": 412330.4340910395
+      },
+      "vision_model.lora_B": {
+        "shape": [
+          768,
+          16
+        ],
+        "mean": -1435246.2611933595,
+        "std": 415460.3784983061
+      },
+      "language_model.q_proj.lora_A": {
+        "shape": [
+          8,
+          4096
+        ],
+        "mean": -1429221.8291045837,
+        "std": 413454.56788492075
+      },
+      "language_model.q_proj.lora_B": {
+        "shape": [
+          4096,
+          8
+        ],
+        "mean": -1432005.391188751,
+        "std": 411803.28589587595
+      },
+      "language_model.v_proj.lora_A": {
+        "shape": [
+          8,
+          4096
+        ],
+        "mean": -1434152.848610382,
+        "std": 412873.56106512307
+      },
+      "language_model.v_proj.lora_B": {
+        "shape": [
+          4096,
+          8
+        ],
+        "mean": -1431801.5433475038,
+        "std": 413176.64284623496
+      }
+    },
+    "privacy_satisfied": true,
+    "participating_clients": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "round": 3,
+    "clients": {
+      "0": {
+        "samples": 10,
+        "labels_sanitized": 20,
+        "weight_layers": [
+          "vision_model.lora_A",
+          "vision_model.lora_B",
+          "language_model.q_proj.lora_A",
+          "language_model.q_proj.lora_B",
+          "language_model.v_proj.lora_A",
+          "language_model.v_proj.lora_B"
+        ]
+      },
+      "1": {
+        "samples": 10,
+        "labels_sanitized": 20,
+        "weight_layers": [
+          "vision_model.lora_A",
+          "vision_model.lora_B",
+          "language_model.q_proj.lora_A",
+          "language_model.q_proj.lora_B",
+          "language_model.v_proj.lora_A",
+          "language_model.v_proj.lora_B"
+        ]
+      },
+      "2": {
+        "samples": 10,
+        "labels_sanitized": 30,
+        "weight_layers": [
+          "vision_model.lora_A",
+          "vision_model.lora_B",
+          "language_model.q_proj.lora_A",
+          "language_model.q_proj.lora_B",
+          "language_model.v_proj.lora_A",
+          "language_model.v_proj.lora_B"
+        ]
+      }
+    },
+    "aggregated_weights": {
+      "vision_model.lora_A": {
+        "shape": [
+          16,
+          768
+        ],
+        "mean": -1431754.1316979167,
+        "std": 412330.4341009181
+      },
+      "vision_model.lora_B": {
+        "shape": [
+          768,
+          16
+        ],
+        "mean": -1435246.2612557777,
+        "std": 415460.378530103
+      },
+      "language_model.q_proj.lora_A": {
+        "shape": [
+          8,
+          4096
+        ],
+        "mean": -1429221.829044525,
+        "std": 413454.56788941566
+      },
+      "language_model.q_proj.lora_B": {
+        "shape": [
+          4096,
+          8
+        ],
+        "mean": -1432005.3911069948,
+        "std": 411803.2858927442
+      },
+      "language_model.v_proj.lora_A": {
+        "shape": [
+          8,
+          4096
+        ],
+        "mean": -1434152.8485320741,
+        "std": 412873.5610392552
+      },
+      "language_model.v_proj.lora_B": {
+        "shape": [
+          4096,
+          8
+        ],
+        "mean": -1431801.543352875,
+        "std": 413176.64280616277
+      }
+    },
+    "privacy_satisfied": true,
+    "participating_clients": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "round": 4,
+    "clients": {
+      "0": {
+        "samples": 10,
+        "labels_sanitized": 30,
+        "weight_layers": [
+          "vision_model.lora_A",
+          "vision_model.lora_B",
+          "language_model.q_proj.lora_A",
+          "language_model.q_proj.lora_B",
+          "language_model.v_proj.lora_A",
+          "language_model.v_proj.lora_B"
+        ]
+      },
+      "1": {
+        "samples": 10,
+        "labels_sanitized": 30,
+        "weight_layers": [
+          "vision_model.lora_A",
+          "vision_model.lora_B",
+          "language_model.q_proj.lora_A",
+          "language_model.q_proj.lora_B",
+          "language_model.v_proj.lora_A",
+          "language_model.v_proj.lora_B"
+        ]
+      }
+    },
+    "aggregated_weights": {
+      "vision_model.lora_A": {
+        "shape": [
+          16,
+          768
+        ],
+        "mean": -1062358.7588031413,
+        "std": 618831.3976293944
+      },
+      "vision_model.lora_B": {
+        "shape": [
+          768,
+          16
+        ],
+        "mean": -1067523.104855957,
+        "std": 622765.3786304857
+      },
+      "language_model.q_proj.lora_A": {
+        "shape": [
+          8,
+          4096
+        ],
+        "mean": -1071562.8978898926,
+        "std": 618875.1370134566
+      },
+      "language_model.q_proj.lora_B": {
+        "shape": [
+          4096,
+          8
+        ],
+        "mean": -1075720.2492183533,
+        "std": 619147.3412958491
+      },
+      "language_model.v_proj.lora_A": {
+        "shape": [
+          8,
+          4096
+        ],
+        "mean": -1077069.722515625,
+        "std": 620328.5120450638
+      },
+      "language_model.v_proj.lora_B": {
+        "shape": [
+          4096,
+          8
+        ],
+        "mean": -1079103.8191406555,
+        "std": 623247.4048791043
+      }
+    },
+    "privacy_satisfied": true,
+    "participating_clients": [
+      0,
+      1
+    ]
+  },
+  {
+    "round": 5,
+    "clients": {
+      "0": {
+        "samples": 10,
+        "labels_sanitized": 40,
+        "weight_layers": [
+          "vision_model.lora_A",
+          "vision_model.lora_B",
+          "language_model.q_proj.lora_A",
+          "language_model.q_proj.lora_B",
+          "language_model.v_proj.lora_A",
+          "language_model.v_proj.lora_B"
+        ]
+      },
+      "1": {
+        "samples": 10,
+        "labels_sanitized": 40,
+        "weight_layers": [
+          "vision_model.lora_A",
+          "vision_model.lora_B",
+          "language_model.q_proj.lora_A",
+          "language_model.q_proj.lora_B",
+          "language_model.v_proj.lora_A",
+          "language_model.v_proj.lora_B"
+        ]
+      },
+      "2": {
+        "samples": 10,
+        "labels_sanitized": 40,
+        "weight_layers": [
+          "vision_model.lora_A",
+          "vision_model.lora_B",
+          "language_model.q_proj.lora_A",
+          "language_model.q_proj.lora_B",
+          "language_model.v_proj.lora_A",
+          "language_model.v_proj.lora_B"
+        ]
+      }
+    },
+    "aggregated_weights": {
+      "vision_model.lora_A": {
+        "shape": [
+          16,
+          768
+        ],
+        "mean": -1431754.1317923178,
+        "std": 412330.4340523089
+      },
+      "vision_model.lora_B": {
+        "shape": [
+          768,
+          16
+        ],
+        "mean": -1435246.2613098144,
+        "std": 415460.37848457316
+      },
+      "language_model.q_proj.lora_A": {
+        "shape": [
+          8,
+          4096
+        ],
+        "mean": -1429221.8291206053,
+        "std": 413454.56791048846
+      },
+      "language_model.q_proj.lora_B": {
+        "shape": [
+          4096,
+          8
+        ],
+        "mean": -1432005.3911149292,
+        "std": 411803.28592519736
+      },
+      "language_model.v_proj.lora_A": {
+        "shape": [
+          8,
+          4096
+        ],
+        "mean": -1434152.8485500184,
+        "std": 412873.56103952124
+      },
+      "language_model.v_proj.lora_B": {
+        "shape": [
+          4096,
+          8
+        ],
+        "mean": -1431801.5433319702,
+        "std": 413176.64277611993
+      }
+    },
+    "privacy_satisfied": true,
+    "participating_clients": [
+      0,
+      1,
+      2
+    ]
+  }
+]
